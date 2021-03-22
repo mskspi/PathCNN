@@ -19,3 +19,5 @@ Contact: <ohj@mskcc.org> or <mingon.kang@unlv.edu>
 
 2. GradCAM  
    - pathcnn_gradcam.py
+
+3. Multi-omics data
