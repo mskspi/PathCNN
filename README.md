@@ -21,9 +21,9 @@ Contact: <ohj@mskcc.org> or <mingon.kang@unlv.edu>
    - pathcnn_gradcam.py
 
 3. Multi-omics data
-   a. GBM multi-omics data including mRNA expression, CNV, and DNA methylation were downloded from the CBioPortal database.
-   b. Pathway information was downloaded from the KEGG database.
-   c. PCA was performed for each pathway in individual omics types.
+   - GBM multi-omics data including mRNA expression, CNV, and DNA methylation were downloded from the CBioPortal database.
+   - Pathway information was downloaded from the KEGG database.
+   - PCA was performed for each pathway in individual omics types.
    
    Five PCs in each omics type are in the following files:
    - PCA_EXP.xlsx, PCA_CNV.xlsx, PCA_MT.xlsx
