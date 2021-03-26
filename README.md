@@ -15,13 +15,13 @@ Contact: <ohj@mskcc.org> or <mingon.kang@unlv.edu>
 ![PathCNN](img/pathcnn.png)
 
 1. Model Building  
-   - pathcnn.py  
+   - PathCNN.py  
 
 2. GradCAM  
-   - pathcnn_gradcam.py
+   - Pathcnn_gradcam.py
 
 3. Multi-omics data
-   - GBM multi-omics data including mRNA expression, CNV, and DNA methylation were downloded from the CBioPortal database.
+   - GBM multi-omics data including mRNA expression, CNV, and DNA methylation were downloaded from the CBioPortal database.
    - Pathway information was downloaded from the KEGG database.
    - PCA was performed for each pathway in individual omics types.
    
