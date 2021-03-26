@@ -1,4 +1,4 @@
-# Interpretable convolutional neural networks on multi-omics data predict long-term survival in glioblastoma
+# PathCNN: Interpretable convolutional neural networks for survival prediction and pathway analysis applied to glioblastoma
 
 Jung Hun Oh <sup>1,†,∗</sup>, Wookjin Choi <sup>2,†</sup>, Euiseong Ko <sup>3</sup>, Mingon Kang <sup>3,∗</sup>, Allen Tannenbaum <sup>4</sup> and Joseph O. Deasy <sup>1</sup>  
 
