@@ -206,7 +206,7 @@ for i in range(num_runs):
                   validation_data=([x_validation, age_validation], [y_validation]))
 
         score = model.predict([x_test, age_test], verbose=0)
-        model.save('PathCNN_model.h5')
+        
 
         if len(observed) == 0:
             observed = y_test
