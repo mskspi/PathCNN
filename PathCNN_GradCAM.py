@@ -78,48 +78,43 @@ def deprocess_image(x):
     return x
 
 
-def grad_cam(model, input, category_index, layer_name):
+def grad_cam(model, category_index, layer_name):
     print(layer_name)
-
-    input_image = input[0]
 
     inp = model.input
     y_c = model.output.op.inputs[0][0, category_index]
     A_k = model.get_layer(layer_name).output
-
     print(y_c, A_k)
 
     get_output = K.function(
         [inp], [A_k, K.gradients(y_c, A_k)[0], model.output])
+
+    return get_output
+
+
+def apply_grad_cam(get_output, input):
+    input_image = input[0]
+
     [conv_output, grad_val, model_output] = get_output(input)
-    print(model_output)
 
     conv_output = conv_output[0]
     grad_val = grad_val[0]
 
-    print(conv_output.shape, grad_val.shape)
-
     weights = np.mean(grad_val, axis=(0, 1))
-
-    print(weights.shape)
 
     grad_cam = np.zeros(dtype=np.float32, shape=conv_output.shape[0:2])
     for k, w in enumerate(weights):
         grad_cam += w * conv_output[:, :, k]
 
-    print(np.percentile(grad_cam, [0, 25, 50, 75, 100]))
-    heatmap = grad_cam = np.maximum(grad_cam, 0)
-    print(np.percentile(grad_cam, [0, 25, 50, 75, 100]))
+    grad_cam = np.maximum(grad_cam, 0)
+    heatmap = grad_cam/np.max(grad_cam)
 
     image = input_image.squeeze()
-    print(image.shape, heatmap.shape)
     image -= np.min(image)
     image = 255 * image / np.max(image)
     image1 = cv2.resize(cv2.cvtColor(image.astype(np.uint8), cv2.COLOR_GRAY2RGB), (240, 1460),
                         interpolation=cv2.INTER_NEAREST)
 
-    print(image1.shape)
-    #heatmap1 = cv2.resize(heatmap, (240,1460))
     print(np.percentile(heatmap/np.max(heatmap), [0, 25, 50, 75, 100]))
     heatmap1 = cv2.resize(heatmap/np.max(heatmap),
                           (240, 1460), interpolation=cv2.INTER_LINEAR)
@@ -127,6 +122,7 @@ def grad_cam(model, input, category_index, layer_name):
     grad_cam = cv2.applyColorMap(np.uint8(255*heatmap1), cv2.COLORMAP_JET)
     grad_cam = np.float32(grad_cam) + np.float32(image1)
     grad_cam = 255 * grad_cam / np.max(grad_cam)
+
     return np.uint8(grad_cam), heatmap
 
 
@@ -220,6 +216,10 @@ layer = layers[4]  # the last layer before flatten
 print(layer.name)
 weights = layer.get_weights()
 
+get_output = [None, None]
+for target_class in range(2):
+  get_output[target_class] = grad_cam(model, target_class, layer.name)
+
 os.makedirs('output/'+layer.name, exist_ok=True)
 for i in range(0, data.shape[0], 1):
     oimg = data[i, :, :]
@@ -240,15 +240,14 @@ for i in range(0, data.shape[0], 1):
     print(predictions)
     predicted_class = np.argmax(predictions)
     print(predicted_class)
-
+    
     for target_class in range(2):
-        gradcam, heatmap = grad_cam(
-            model, preprocessed_input, target_class, layer.name)
+        gradcam, heatmap = apply_grad_cam(get_output[target_class], preprocessed_input)
         filename = f'output/{layer.name}/gradcam{i:03d}_{outcomes[i]:.0f}_{predicted_class:d}_{target_class:d}_{predictions[0][target_class]:0.2f}.png'
         cv2.imwrite(filename, gradcam)
 
         heatmap1 = cv2.resize(heatmap, (no_pc*3, path_n))
-        print(heatmap.shape)
+        #print(heatmap.shape)
         data_row = [[outcomes[i], predicted_class, target_class,
                      predictions[0][target_class]]+heatmap1.flatten().tolist()]
         gradcam_pd = pd.DataFrame(data_row, columns=col, index=[i])
