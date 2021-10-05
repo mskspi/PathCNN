@@ -18,8 +18,8 @@ Contact: <ohj@mskcc.org> or <mingon.kang@unlv.edu>
    - PathCNN.py  
 
 2. GradCAM  
-   - PathCNN_GradCAM.py: to generate a model for GradCAM (PathCNN_model.h5)
-   - PathCNN_GradCAM_modeling.py: to generate GradCAM images and results (pathcnn_gradcam.csv)
+   - PathCNN_GradCAM_modeling.py: to generate a model for GradCAM (PathCNN_model.h5)
+   - PathCNN_GradCAM.py: to generate GradCAM images and a resultant file (pathcnn_gradcam.csv)
 
 3. Multi-omics data
    - GBM multi-omics data including mRNA expression, CNV, and DNA methylation were downloaded from the CBioPortal database.
